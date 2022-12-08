@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Practica DOM</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            clifford: '#da373d',
+          }
+        }
+      }
+    }
+  </script>
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .content-auto {
+        content-visibility: auto;
+      }
+    }
+    @layer components {
+      .nav-bar {
+        @apply w-auto bg-blue-300 rounded-full mx-10 my-3 px-10 py-2
+      }
+      .grid-nav-bar {
+        @apply grid grid-cols-3 gap-5
+      }
+      .grid-nav-bar-col {
+        @apply col-span-1
+      }
+      .nav-image-dimension{
+        @apply w-28
+      }
+    }
+  </style>
+</head>
+<body>
+    <header>
+    </header>
+    <main>
+
+    </main>
+    <footer>
+
+    </footer>
+    <script src="main.js"></script>
+</body>
+</html>
