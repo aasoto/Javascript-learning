@@ -29,7 +29,7 @@ param_col_2.classList.add('col-2')
 param_grid.appendChild(param_col_2)
 
 const param_input = document.createElement('input')
-param_input.classList.add('input')
+param_input.classList.add('input-big')
 param_input.id="title"
 param_col_2.appendChild(param_input)
 
@@ -44,10 +44,8 @@ param_button.id="add"
 param_col_1.appendChild(param_button)
 
 /**-------------- EVENTOS --------------- */
-let cards = {
-  title: '',
-  type: []
-}
+let types = ['ganadora', 'finalista', 'designada']
+let countries = ['colombia', 'venezuela', 'mexico', 'brasil']
 
 let add_card_title = ''
 const add_card = document.querySelector('#add')
@@ -57,6 +55,13 @@ let card_body = ''
 let card_footer = ''
 let card_footer_content = ''
 let counter = 0
+/**Fields body card */
+let label_name = ''
+let name = ''
+let type_input = ''
+let label_country = ''
+let country = ''
+/**Buttons footer card */
 let button_save = ''
 let button_remove = ''
 
@@ -65,6 +70,44 @@ card_grid.classList.add('grid-3')
 main.appendChild(card_grid)
 
 let card_col = ''
+
+function content_body_card(){
+  /**Add name input */
+  label_name = document.createElement('label')
+  label_name.textContent = 'Nombre'
+  label_name.for = "name-"+counter
+  name = document.createElement('input')
+  name.classList.add('input')
+  name.id = "name-"+counter
+  card_body.append(label_name, name)
+  /**Add type contestant */
+  let type_name = ''
+  types.forEach(type =>{
+    type_input = document.createElement('input')
+    type_input.type = 'radio'
+    type_input.name = 'type-'+counter
+    type_input.value = type
+    type_name = document.createElement('span')
+    type_name.classList.add('span-card')
+    type_name.textContent = type
+    card_body.append(type_input, type_name)
+  })
+  /**Add countries */
+  label_country = document.createElement('label')
+  label_country.textContent = 'País'
+  country = document.createElement('select')
+  country.id = 'country-'+counter
+  country.name = 'country-'+counter
+  card_body.append(label_country, country)
+  let country_option = ''
+  countries.forEach(c =>{
+    country_option = document.createElement('option')
+    country_option.value = c
+    country_option.classList.add('capitalize')
+    country_option.textContent = c
+    country.append(country_option)
+  })
+}
 
 function buttons_footer_card(){
   button_save = document.createElement('button')
@@ -95,8 +138,8 @@ add_card.addEventListener('click', function (e) {
   //add card body
   card_body = document.createElement('div')
   card_body.classList.add('card-body')
-  card_body.textContent = 'Cuerpo de la tarjeta'
   card.appendChild(card_body)
+  content_body_card()
   //add card footer
   card_footer = document.createElement('div')
   card_footer.classList.add('card-footer')
