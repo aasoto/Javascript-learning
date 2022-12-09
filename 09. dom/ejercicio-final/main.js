@@ -44,8 +44,9 @@ param_button.id="add"
 param_col_1.appendChild(param_button)
 
 /**-------------- EVENTOS --------------- */
-let types = ['ganadora', 'finalista', 'designada']
-let countries = ['colombia', 'venezuela', 'mexico', 'brasil']
+const types = ['ganadora', 'finalista', 'designada']
+const countries = ['colombia', 'venezuela', 'mexico', 'brasil']
+const positions = ['finalista', 'semifinalista', 'cuartofinalista']
 
 let add_card_title = ''
 const add_card = document.querySelector('#add')
@@ -55,12 +56,14 @@ let card_body = ''
 let card_footer = ''
 let card_footer_content = ''
 let counter = 0
+let break_line = ''
 /**Fields body card */
 let label_name = ''
 let name = ''
 let type_input = ''
 let label_country = ''
 let country = ''
+let label_position = ''
 /**Buttons footer card */
 let button_save = ''
 let button_remove = ''
@@ -93,12 +96,15 @@ function content_body_card(){
     card_body.append(type_input, type_name)
   })
   /**Add countries */
+  break_line = document.createElement('br')
   label_country = document.createElement('label')
+  label_country.for = 'country-'+counter
   label_country.textContent = 'País'
   country = document.createElement('select')
+  country.classList.add('input')
   country.id = 'country-'+counter
   country.name = 'country-'+counter
-  card_body.append(label_country, country)
+  card_body.append(break_line, label_country, country)
   let country_option = ''
   countries.forEach(c =>{
     country_option = document.createElement('option')
@@ -107,16 +113,39 @@ function content_body_card(){
     country_option.textContent = c
     country.append(country_option)
   })
+  /**Add positions */
+  break_line = document.createElement('br')
+  label_position = document.createElement('label')
+  label_position.for = 'position-'+counter
+  label_position.textContent = 'Posición'
+  card_body.append(label_position, break_line)
+  let position_input = ''
+  let position_name = ''
+  positions.forEach(position => {
+    position_input = document.createElement('input')
+    position_input.type = 'checkbox'
+    position_input.value = position
+    position_input.name = 'position'
+    position_name = document.createElement('span')
+    position_name.classList.add('span-card')
+    position_name.textContent = position
+    card_body.append(position_input, position_name)
+  })
+
 }
 
 function buttons_footer_card(){
   button_save = document.createElement('button')
   button_save.classList.add('btn-secondary')
+  button_save.id = 'send-'+counter
+  button_save.card = counter
   button_save.textContent = 'Enviar'
   button_remove = document.createElement('button')
   button_remove.classList.add('btn-danger')
+  button_remove.id = 'remove'
   button_remove.textContent = 'Eliminar'
-  card_footer_content.append(button_remove, button_save)
+  card_footer.append(button_remove, button_save)
+  save_new_register()
 }
 
 add_card.addEventListener('click', function (e) {
@@ -143,10 +172,17 @@ add_card.addEventListener('click', function (e) {
   //add card footer
   card_footer = document.createElement('div')
   card_footer.classList.add('card-footer')
+  card_footer.id = counter
   card.appendChild(card_footer)
-  card_footer_content = document.createElement('div')
-  card_footer.appendChild(card_footer_content)
   buttons_footer_card()
 
   counter = counter + 1
 })
+
+let enviado = ''
+function save_new_register(){
+  enviado = document.querySelector('#send-'+counter)
+  enviado.addEventListener('click', function (e) {
+    console.log(e.target.card)
+  })
+}
