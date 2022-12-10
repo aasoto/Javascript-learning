@@ -89,6 +89,7 @@ function content_body_card(){
     type_input = document.createElement('input')
     type_input.type = 'radio'
     type_input.name = 'type-'+counter
+    type_input.id = 'type-'+counter
     type_input.value = type
     type_name = document.createElement('span')
     type_name.classList.add('span-card')
@@ -125,7 +126,8 @@ function content_body_card(){
     position_input = document.createElement('input')
     position_input.type = 'checkbox'
     position_input.value = position
-    position_input.name = 'position'
+    position_input.name = 'position-'+counter
+    position_input.id = 'position-'+counter
     position_name = document.createElement('span')
     position_name.classList.add('span-card')
     position_name.textContent = position
@@ -142,16 +144,19 @@ function buttons_footer_card(){
   button_save.textContent = 'Enviar'
   button_remove = document.createElement('button')
   button_remove.classList.add('btn-danger')
-  button_remove.id = 'remove'
+  button_remove.id = 'remove-'+counter
+  button_remove.cardId = counter
   button_remove.textContent = 'Eliminar'
   card_footer.append(button_remove, button_save)
   save_new_register()
+  remove_card()
 }
 
 add_card.addEventListener('click', function (e) {
   //add column
   card_col = document.createElement('div')
   card_col.classList.add('col-1')
+  card_col.id = "col-card-"+counter
   card_grid.appendChild(card_col)
   //add card body
   card = document.createElement('div')
@@ -179,10 +184,143 @@ add_card.addEventListener('click', function (e) {
   counter = counter + 1
 })
 
-let enviado = ''
+let card_records_done = false
+let new_contestant = {
+  name: '',
+  type: '',
+  country: '',
+  position: []
+}
+
+let enviado = '', array_position = 0
 function save_new_register(){
   enviado = document.querySelector('#send-'+counter)
   enviado.addEventListener('click', function (e) {
-    console.log(e.target.card)
+    new_contestant.name = document.querySelector('#name-'+e.target.card)
+    new_contestant.country = document.querySelector('#country-'+e.target.card)
+
+    new_contestant.name = new_contestant.name.value
+    new_contestant.country = new_contestant.country.value
+
+    const type_radio = document.querySelectorAll('input[type=radio]')
+    type_radio.forEach(type =>{
+      if (type.checked) {
+        new_contestant.type = type.value
+      }
+    })
+
+    const position_checked = document.querySelectorAll('input[type=checkbox]:checked');
+    position_checked.forEach(p_c =>{
+      new_contestant.position.push(p_c.value)
+    })
+
+    console.log(new_contestant)
+    if (card_records_done) {
+      add_new_record(new_contestant)
+    } else {
+      create_records_card()
+      card_records_done = true
+    }
+
+    new_contestant.name = ''
+    new_contestant.type = ''
+    new_contestant.country = ''
+    new_contestant.position = []
   })
 }
+
+let element_to_remove = '', to_remove = ''
+function remove_card() {
+  element_to_remove = document.querySelector('#col-card-'+counter)
+  to_remove = document.querySelector('#remove-'+counter)
+  to_remove.addEventListener('click', function (e) {
+    element_to_remove.remove()
+  })
+}
+
+let card_records_body = ''
+function create_records_card() {
+  const card_records_grid = document.createElement('div')
+  card_records_grid.classList.add('grid-3')
+  main.appendChild(card_records_grid)
+  
+  const col_3 = document.createElement('div')
+  col_3.classList.add('col-3')
+  col_3.id = 'records'
+  card_records_grid.appendChild(col_3)
+  
+  const card_records = document.createElement('div')
+  card_records.classList.add('card')
+  card_records.id = 'card-records'
+  col_3.appendChild(card_records)
+  
+  const card_records_header = document.createElement('div')
+  card_records_header.classList.add('card-primary-header')
+  card_records_header.textContent = 'Registros'
+  card_records.appendChild(card_records_header)
+  
+  card_records_body = document.createElement('div')
+  card_records_body.classList.add('card-body')
+  card_records.appendChild(card_records_body)
+  
+  const card_records_footer = document.createElement('div')
+  card_records_footer.classList.add('card-footer')
+  card_records.appendChild(card_records_footer)
+  create_records_table()
+}
+
+let table_body = ''
+function create_records_table () {
+  const table_records = document.createElement('table')
+  table_records.classList.add('table')
+  card_records_body.appendChild(table_records)
+  
+  const table_header = document.createElement('thead')
+  table_header.classList.add('table-header')
+  table_records.appendChild(table_header)
+  
+  const table_header_row = document.createElement('tr')
+  table_header_row.classList.add('table-header-row')
+  table_header.appendChild(table_header_row)
+
+  const table_header_columns = ['Name', 'Type', 'Country', 'Position']
+  let header_column = ''
+  table_header_columns.forEach( table_header_column => {
+    header_column = document.createElement('td')
+    header_column.classList.add('table-header-cel')
+    header_column.textContent = table_header_column
+    table_header_row.appendChild(header_column)
+  })
+
+  table_body = document.createElement('tbody')
+  table_body.classList.add('table-body')
+  table_records.appendChild(table_body)
+  add_new_record(new_contestant)
+}
+
+let table_body_row = '', table_body_cel = ''
+function add_new_record(contestant) {
+  table_body_row = document.createElement('tr')
+  table_body.appendChild(table_body_row)
+
+  table_body_cel = document.createElement('td')
+  table_body_cel.classList.add('table-body-cel')
+  table_body_cel.textContent = contestant.name
+  table_body_row.appendChild(table_body_cel)
+
+  table_body_cel = document.createElement('td')
+  table_body_cel.classList.add('table-body-cel')
+  table_body_cel.textContent = contestant.type
+  table_body_row.appendChild(table_body_cel)
+
+  table_body_cel = document.createElement('td')
+  table_body_cel.classList.add('table-body-cel')
+  table_body_cel.textContent = contestant.country
+  table_body_row.appendChild(table_body_cel)
+
+  table_body_cel = document.createElement('td')
+  table_body_cel.classList.add('table-body-cel')
+  table_body_cel.textContent = contestant.position
+  table_body_row.appendChild(table_body_cel)
+}
+
